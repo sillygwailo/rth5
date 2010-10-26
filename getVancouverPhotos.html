@@ -14,6 +14,7 @@
   $.ajaxSetup({
     cache: false // turn off AJAX caching
   });
+var cacheObj = {};
 function doIt() {
   var d = new Date();
   var now = Math.round(d.getTime() * 0.001);
@@ -37,9 +38,14 @@ function doIt() {
     }
     else {
       $.each(flickrjs.photos.photo,function(i,photo) {
-        $("#dummy").append("<li><a href=\"http://flickr.com/photos/"+photo.owner+
-        "/"+photo.id+"/\"><img src=\""+photo.url_s+"\" /></a><p>Latitude:"+photo.latitude+" Longitude:"+
-           photo.longitude+"</p></li>");
+        if (!cacheObj['id' + photo.id]) {
+          $("#dummy").append("<li><a href=\"http://flickr.com/photos/"+photo.owner+
+            "/"+photo.id+"/\"><img src=\""+photo.url_s+"\" /></a><p>Latitude:"+photo.latitude+" Longitude:"+
+            photo.longitude+"</p></li>");
+          cacheObj['id' + photo.id] = true;
+        }
+        else {
+        }
       });
     }
   });
