@@ -4,6 +4,7 @@
 <title>Vancouver Photos every 60 seconds: Owner, Id Lat/Lon</title>
 </head>
 <body>
+<div id="status"></div>
 <ol>
 <div id="dummy">
 </div>
@@ -32,13 +33,14 @@ function doIt() {
             "&page=1&sort=date-posted-desc&jsoncallback=?",
   function(flickrjs){ //flickrjs is the JSON object from flickr
     if (parseInt(flickrjs.photos.total) == 0) {
-       $("#dummy").append("<li>No Vancouver geotagged photos at:"+d.toLocaleString()
-       +" pages:"+flickrjs.photos.pages+" status:"+flickrjs.stat+
-       "</li>");
+       $("#status").text("No Vancouver geotagged photos at:"+d.toLocaleString()
+       +" pages: "+flickrjs.photos.pages+" status: "+flickrjs.stat);
+       $('#status').slideDown('slow');
     }
     else {
       $.each(flickrjs.photos.photo,function(i,photo) {
         if (!cacheObj['id' + photo.id]) {
+          $("#status").hide();
           $("#dummy").append("<li><a href=\"http://flickr.com/photos/"+photo.owner+
             "/"+photo.id+"/\"><img src=\""+photo.url_s+"\" /></a><p>Latitude:"+photo.latitude+" Longitude:"+
             photo.longitude+"</p></li>");
