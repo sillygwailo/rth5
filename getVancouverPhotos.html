@@ -24,7 +24,7 @@ function doIt() {
   var intervalToSearchForGeoTaggedPhotos_str = intervalToSearchForGeoTaggedPhotos +'';
   var apiKey = 'a3b9e1fec66dfb1797c7414dfbb81974';
   var woeID = '9807';
-  $.getJSON("http://api.flickr.com//services/rest/?method=flickr.photos.search"+
+  $.getJSON("http://api.flickr.com/services/rest/?method=flickr.photos.search"+
             "&api_key="+apiKey+
             "&format=json&content_type=1&woe_id="+woeID+
             "&per_page=10&min_upload_date="+intervalToSearchForGeoTaggedPhotos_str+
@@ -40,11 +40,23 @@ function doIt() {
     else {
       $.each(flickrjs.photos.photo,function(i,photo) {
         if (!cacheObj['id' + photo.id]) {
-          $("#status").hide();
-          $("#dummy").append("<li><a href=\"http://flickr.com/photos/"+photo.owner+
-            "/"+photo.id+"/\"><img src=\""+photo.url_s+"\" /></a><p>Latitude:"+photo.latitude+" Longitude:"+
-            photo.longitude+"</p></li>");
-          cacheObj['id' + photo.id] = true;
+          $.getJSON("http://api.flickr.com/services/rest/?method=flickr.people.getInfo"+
+            "&api_key="+apiKey+
+            "&format=json&content_type=1"+
+            "&user_id="+photo.owner+
+            "&jsoncallback=?", function(flickrowner) {
+              if (flickrowner.person.path_alias) {
+                path_alias = flickrowner.person.path_alias;
+              }
+              else {
+                path_alias = photo.owner;
+              }
+              $("#status").hide();
+              $("#dummy").append("<li><a href=\"http://www.flickr.com/photos/"+flickrowner.person.path_alias+
+                "/"+photo.id+"/\"><img src=\""+photo.url_s+"\" /></a><p>Latitude:"+photo.latitude+" Longitude:"+
+                photo.longitude+"</p></li>");
+              cacheObj['id' + photo.id] = true;
+          });
         }
         else {
         }
