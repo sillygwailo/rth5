@@ -52,7 +52,7 @@ function doIt() {
                 path_alias = photo.owner;
               }
               $("#status").hide();
-              $("#dummy").append("<li><a href=\"http://www.flickr.com/photos/"+flickrowner.person.path_alias+
+              $("#dummy").append("<li><a href=\"http://www.flickr.com/photos/"+path_alias+
                 "/"+photo.id+"/\"><img src=\""+photo.url_s+"\" /></a><p>Latitude:"+photo.latitude+" Longitude:"+
                 photo.longitude+"</p></li>");
               cacheObj['id' + photo.id] = true;
